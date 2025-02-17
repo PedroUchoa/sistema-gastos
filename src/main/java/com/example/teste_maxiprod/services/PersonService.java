@@ -1,4 +1,43 @@
 package com.example.teste_maxiprod.services;
 
+import com.example.teste_maxiprod.dtos.UpdatePersonDto;
+import com.example.teste_maxiprod.models.Person;
+import com.example.teste_maxiprod.repositories.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
 public class PersonService {
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    public Person createPerson(Person person){
+        return personRepository.save(person);
+    }
+
+    public Person getPerson(String id){
+        return personRepository.getReferenceById(id);
+    }
+
+    public List<Person> getAllPersons(){
+        return personRepository.findAll();
+    }
+
+    //Utilizando um Dto Para a atualização da Pessoa pois assim tenho certeza que o campo "id" não podera ser alterado
+    public Person updatePerson(UpdatePersonDto updatePerson, String id){
+        Person person = personRepository.getReferenceById(id);
+        person.update(updatePerson);
+        return personRepository.save(person);
+    }
+
+    //Eu normalmente não gosto de fazer com que o dado seja excluido permanentemente do banco, gosto de manter ele apenas desativado, mas para manter a api simples dessa vez vou fazer a exclusão total do dado.
+    public void deletePerson(String id){
+        Person person = personRepository.getReferenceById(id);
+        personRepository.delete(person);
+    }
+
+
 }
