@@ -1,23 +1,27 @@
 package com.example.teste_maxiprod.models;
 
+import com.example.teste_maxiprod.dtos.TotalTransactionDto;
 import com.example.teste_maxiprod.dtos.UpdatePersonDto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "Person")
 @Table(name = "persons")
+@Entity(name = "Person")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String name;
     private Integer age;
-    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JsonManagedReference
-    @OrderBy("priority Desc")
     private List<TransactionObj> transactions = new ArrayList<>();
 
     public Person() {
@@ -63,11 +67,23 @@ public class Person {
     }
 
     public void update(UpdatePersonDto newPerson) {
-        if(newPerson.name() != null && !newPerson.name().isEmpty()){
+        if(newPerson.name() != null && !newPerson.name().isBlank()){
             this.name = newPerson.name();
         }
         if(newPerson.age() != null ){
             this.age = newPerson.age();
         }
     }
+
+    public TotalTransactionDto totalTransaction(){
+        int totalIncome = 0;
+        int totalExpense = 0;
+        for (TransactionObj data : this.getTransactions()){
+            if(data.getType() == TransactionType.INCOME) totalIncome += data.getValue();
+            if(data.getType() == TransactionType.EXPENSE) totalExpense += data.getValue();
+     }
+
+        return new TotalTransactionDto(this.name,totalIncome,totalExpense,totalIncome-totalExpense);
+    }
+
 }

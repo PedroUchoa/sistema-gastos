@@ -1,10 +1,12 @@
 package com.example.teste_maxiprod.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity(name = "TransactionObj")
 @Table(name = "transactions")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TransactionObj {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

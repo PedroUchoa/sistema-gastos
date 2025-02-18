@@ -1,13 +1,18 @@
 package com.example.teste_maxiprod.services;
 
 
+import com.example.teste_maxiprod.dtos.CreateTransactionDTO;
+import com.example.teste_maxiprod.dtos.TotalTransactionDto;
 import com.example.teste_maxiprod.models.Person;
 import com.example.teste_maxiprod.models.TransactionObj;
 import com.example.teste_maxiprod.repositories.PersonRepository;
 import com.example.teste_maxiprod.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,8 +25,13 @@ public class TransactionService {
     @Autowired
     private PersonRepository personRepository;
 
-    public TransactionObj createTransaction(TransactionObj transactionObj){
-        Person person = personRepository.getReferenceById(transactionObj.getId());
+    public TransactionObj createTransaction(CreateTransactionDTO data){
+        Person person = personRepository.getReferenceById(data.idPerson());
+        TransactionObj transactionObj = new TransactionObj();
+        transactionObj.setDescription(data.description());
+        transactionObj.setPerson(person);
+        transactionObj.setValue(data.value());
+        transactionObj.setType(data.type());
         person.getTransactions().add(transactionObj);
         personRepository.save(person);
         return transactionRepository.save(transactionObj);
@@ -31,10 +41,18 @@ public class TransactionService {
         return transactionRepository.getReferenceById(id);
     }
 
-    public List<TransactionObj> getAllTransactions(){
-        return transactionRepository.findAll();
+    public Page<TransactionObj> getAllTransactions(Pageable pageable){
+        return transactionRepository.findAll(pageable);
     }
 
+    public List<TotalTransactionDto> getAllTransactions(){
+        List<TotalTransactionDto> totalTransactions = new ArrayList<>();
+        List<Person> persons  = personRepository.findAll();
+        for(Person data : persons){
+            totalTransactions.add(data.totalTransaction());
+        }
+        return totalTransactions;
+    }
 
 
 }
