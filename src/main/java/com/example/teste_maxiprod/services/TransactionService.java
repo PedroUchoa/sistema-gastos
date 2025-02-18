@@ -2,6 +2,7 @@ package com.example.teste_maxiprod.services;
 
 
 import com.example.teste_maxiprod.dtos.CreateTransactionDTO;
+import com.example.teste_maxiprod.dtos.ReturnTransactionDto;
 import com.example.teste_maxiprod.dtos.TotalTransactionDto;
 import com.example.teste_maxiprod.infra.exceptions.PersonNotFoundException;
 import com.example.teste_maxiprod.infra.exceptions.TransactionNotFoundException;
@@ -38,12 +39,13 @@ public class TransactionService {
         return transactionRepository.save(transactionObj);
     }
 
-    public TransactionObj getTransaction(String id){
-        return transactionRepository.findById(id).orElseThrow(()-> new TransactionNotFoundException(id));
+    public ReturnTransactionDto getTransaction(String id){
+        TransactionObj transactionObj = transactionRepository.findById(id).orElseThrow(()-> new TransactionNotFoundException(id));
+        return new ReturnTransactionDto(transactionObj.getId(),transactionObj.getDescription(),transactionObj.getValue(),transactionObj.getType(),transactionObj.getPerson().getName());
     }
 
-    public Page<TransactionObj> getAllTransactions(Pageable pageable){
-        return transactionRepository.findAll(pageable);
+    public Page<ReturnTransactionDto> getAllTransactions(Pageable pageable){
+        return transactionRepository.findAll(pageable).map(ReturnTransactionDto::new);
     }
 
     public List<TotalTransactionDto> getAllTransactions(){

@@ -1,6 +1,7 @@
 package com.example.teste_maxiprod.controllers;
 
 import com.example.teste_maxiprod.dtos.CreateTransactionDTO;
+import com.example.teste_maxiprod.dtos.ReturnTransactionDto;
 import com.example.teste_maxiprod.dtos.TotalTransactionDto;
 import com.example.teste_maxiprod.models.Person;
 import com.example.teste_maxiprod.models.TransactionObj;
@@ -32,14 +33,14 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<TransactionObj>> listAllPersons(@PageableDefault(size = 10, sort = {"id"}) Pageable pageable){
-        Page<TransactionObj> TransactionObj = transactionService.getAllTransactions(pageable);
+    public ResponseEntity<Page<ReturnTransactionDto>> listAllPersons(@PageableDefault(size = 10, sort = {"id"}) Pageable pageable){
+        Page<ReturnTransactionDto> TransactionObj = transactionService.getAllTransactions(pageable);
         return ResponseEntity.ok(TransactionObj);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TransactionObj> listPerson(@PathVariable String id){
-        TransactionObj TransactionObj = transactionService.getTransaction(id);
+    public ResponseEntity<ReturnTransactionDto> listPerson(@PathVariable String id){
+        ReturnTransactionDto TransactionObj = transactionService.getTransaction(id);
         return ResponseEntity.ok(TransactionObj);
     }
 
