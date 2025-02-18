@@ -1,5 +1,6 @@
 package com.example.teste_maxiprod.models;
 
+import com.example.teste_maxiprod.dtos.CreateTransactionDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -31,6 +32,13 @@ public class TransactionObj {
         this.value = value;
         this.description = description;
         this.type = type;
+    }
+
+    public TransactionObj(CreateTransactionDTO data, Person person) {
+        this.person = person;
+        this.value = data.value();
+        this.description = data.description();
+        this.type = data.type();
     }
 
     public String getId() {

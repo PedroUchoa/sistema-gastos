@@ -3,8 +3,12 @@ package com.example.teste_maxiprod.services;
 
 import com.example.teste_maxiprod.dtos.CreateTransactionDTO;
 import com.example.teste_maxiprod.dtos.TotalTransactionDto;
+import com.example.teste_maxiprod.infra.exceptions.PersonNotFoundException;
+import com.example.teste_maxiprod.infra.exceptions.TransactionNotFoundException;
+import com.example.teste_maxiprod.infra.exceptions.UnderAgeException;
 import com.example.teste_maxiprod.models.Person;
 import com.example.teste_maxiprod.models.TransactionObj;
+import com.example.teste_maxiprod.models.TransactionType;
 import com.example.teste_maxiprod.repositories.PersonRepository;
 import com.example.teste_maxiprod.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +30,16 @@ public class TransactionService {
     private PersonRepository personRepository;
 
     public TransactionObj createTransaction(CreateTransactionDTO data){
-        Person person = personRepository.getReferenceById(data.idPerson());
-        TransactionObj transactionObj = new TransactionObj();
-        transactionObj.setDescription(data.description());
-        transactionObj.setPerson(person);
-        transactionObj.setValue(data.value());
-        transactionObj.setType(data.type());
+        Person person = personRepository.findById(data.idPerson()).orElseThrow(()->new PersonNotFoundException(data.idPerson()));
+        if(person.getAge() < 18 && data.type() == TransactionType.EXPENSE) throw new UnderAgeException();
+        TransactionObj transactionObj = new TransactionObj(data,person);
         person.getTransactions().add(transactionObj);
         personRepository.save(person);
         return transactionRepository.save(transactionObj);
     }
 
     public TransactionObj getTransaction(String id){
-        return transactionRepository.getReferenceById(id);
+        return transactionRepository.findById(id).orElseThrow(()-> new TransactionNotFoundException(id));
     }
 
     public Page<TransactionObj> getAllTransactions(Pageable pageable){
