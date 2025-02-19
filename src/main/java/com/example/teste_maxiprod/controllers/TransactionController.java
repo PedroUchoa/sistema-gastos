@@ -3,7 +3,6 @@ package com.example.teste_maxiprod.controllers;
 import com.example.teste_maxiprod.dtos.CreateTransactionDTO;
 import com.example.teste_maxiprod.dtos.ReturnTransactionDto;
 import com.example.teste_maxiprod.dtos.TotalTransactionDto;
-import com.example.teste_maxiprod.models.Person;
 import com.example.teste_maxiprod.models.TransactionObj;
 import com.example.teste_maxiprod.services.TransactionService;
 import jakarta.transaction.Transactional;
@@ -27,7 +26,7 @@ public class TransactionController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<TransactionObj> addPerson(@RequestBody CreateTransactionDTO data){
+    public ResponseEntity<TransactionObj> addTransaction(@RequestBody CreateTransactionDTO data){
         TransactionObj TransactionObj =transactionService.createTransaction(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(TransactionObj);
     }
