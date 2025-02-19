@@ -7,6 +7,17 @@ O serviço é um organizador de gastos que utiliza SQL como database para salvar
 
 ![image](https://github.com/user-attachments/assets/5bbb4e5a-195a-4d0e-8cb2-76a62a51a849)
 
+## Entenda os Endpoints
+- ``/api/v1/person: Endpoint de tipo Post onde é feita a criação de uma pessoa``
+- ``/api/v1/person: Endpoint de tipo GET onde é feita o retorno de todas as pessoas paginadas``
+- ``/api/v1/person/{id}: Endpoint de tipo GET onde é feita o retorno de uma pessoa especifica com base no seu id``
+- ``/api/v1/person/{id}: Endpoint de tipo PUT onde é feita a atualização de uma pessoa com base no seu ID``
+- ``/api/v1/person/{id}: Endpoint de tipo DELETE onde é feita a exclusão de uma pessoa``
+- ``/api/v1/transaction: Endpoint de tipo POST onde é feita a criação de uma transação``
+- ``/api/v1/transaction: Endpoint de tipo GET onde é feito o retorno de todas transações paginadas``
+- ``/api/v1/transaction/{id}: Endpoint de tipo GET onde é feito o retorno de uma transação com base no ID``
+- ``/api/v1/transaction/total: Endpoint de tipo GET onde é feito o retorno do valor total das transações``
+
 
 ## ✔️ Bibliotecas e tecnologias utilizadas
 
